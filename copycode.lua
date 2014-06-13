@@ -68,9 +68,13 @@ function gui.dialog:k_any(k)
 end
 
 function gui.copiar:action()
+	local v = string.format(" %s ", gui.entrada.value)
 	local s = ""
-	for code in gui.entrada.value:gmatch("%a%a%d%d%d%d%d%d%d%d%d%a%a") do
-		s = s .. code .. "\n"
+	for code in v:gmatch("%s(%a%a%d%d%d%d%d%d%d%d%d%a%a)%s") do
+		s = string.format("%s%s\n", s, code)
+	end
+	for code in v:gmatch("%s(M%a%d%d%d%d%d%d%d%d%d)%s") do
+		s = string.format("%s%sBR\n", s, code)
 	end
 	gui.entrada.value = s
 	gui.clipboard.text = nil
