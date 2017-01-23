@@ -16,10 +16,17 @@ gui.dialog = iup.dialog{
 			expand    = "YES",
 			multiline = "YES",
 		},
-		iup.button{
-			name   = "copiar",
-			title  = "&Copiar",
-			expand = "HORIZONTAL",
+		iup.hbox{
+			iup.button{
+				name   = "limpar",
+				title  = "&Limpar",
+				expand = "HORIZONTAL",
+			},
+			iup.button{
+				name   = "copiar",
+				title  = "&Copiar",
+				expand = "HORIZONTAL",
+			},
 		},
 	}
 }
@@ -70,15 +77,26 @@ end
 function gui.copiar:action()
 	local v = string.format(" %s ", gui.entrada.value):gsub("%s", "  ")
 	local s = ""
-	for code in v:gmatch(" (%a%a%d%d%d%d%d%d%d%d%d%a%a) ") do
+	-- Código no formato CSV do SRO
+	for code in v:gmatch("%W(%a%a  %d%d%d%d%d%d%d%d%-%d  %a%a)%W") do
+		s = string.format("%s%s\n", s, code:gsub("  ", ""):gsub("%-", ""))
+	end
+	-- Código formato normal
+	for code in v:gmatch("%W(%a%a%d%d%d%d%d%d%d%d%d%a%a)%W") do
 		s = string.format("%s%s\n", s, code)
 	end
-	for code in v:gmatch(" (M%a%d%d%d%d%d%d%d%d%d) ") do
+	-- Código de telegrama faltando o BR final
+	for code in v:gmatch("%W(M%a%d%d%d%d%d%d%d%d%d)%W") do
 		s = string.format("%s%sBR\n", s, code)
 	end
 	gui.entrada.value = s
 	gui.clipboard.text = nil
 	gui.clipboard.text = s
+end
+
+function gui.limpar:action()
+	gui.entrada.value = ""
+	iup.SetFocus(gui.entrada)
 end
 
 gui.dialog:show()
