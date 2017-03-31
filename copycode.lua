@@ -28,7 +28,7 @@ gui.dialog = iup.dialog{
 				expand = "HORIZONTAL",
 			},
 		},
-	}
+	},
 }
 
 function gui.iupnames(self, elem)
@@ -73,6 +73,28 @@ function gui.dialog:k_any(k)
 		return iup.IGNORE
 	end
 end
+
+--[[
+    javascript:
+	var v = " " + document.getElementById("objetos").value + " ";
+	var s = "";
+	var code;
+	/* Código no formato CSV do SRO */
+	var r = /\b[A-Za-z]{2} \d{8}\-\d [A-Za-z]{2}\b/g;
+	while (code = r.exec(v))
+		s = s + code[0].replace(/ /g, "").replace("-", "") + ";";
+	/* Código formato normal */
+	var r = /\b[A-Za-z]{2}\d{9}[A-Za-z]{2}\b/g;
+	while (code = r.exec(v))
+		s = s + code[0] + ";";
+	/* Código de telegrama faltando o BR final */
+	var r = /\b[Mm][A-Za-z]\d{9}\b/g;
+	while (code = r.exec(v))
+		s = s + code[0] + "BR;";
+	document.getElementById("objetos").value = s;
+	document.getElementById("frmPesquisa").submit();
+	void(0);
+]]
 
 function gui.copiar:action()
 	local v = string.format(" %s ", gui.entrada.value):gsub("%s", "  ")
