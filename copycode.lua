@@ -6,7 +6,7 @@ gui.clipboard = iup.clipboard{}
 
 gui.dialog = iup.dialog{
 	title      = "Copy Code",
-	font       = "HELVETICA_BOLD_12",
+	font       = "Helvetica, Bold 12",
 	rastersize = "300x300",
 	iup.vbox{
 		margin = "10x10",
